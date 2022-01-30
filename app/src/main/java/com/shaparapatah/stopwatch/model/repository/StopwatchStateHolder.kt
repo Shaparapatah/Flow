@@ -1,5 +1,7 @@
-package com.shaparapatah.stopwatch.model
+package com.shaparapatah.stopwatch.model.repository
 
+import com.shaparapatah.stopwatch.model.ElapsedTimeCalculator
+import com.shaparapatah.stopwatch.model.StopwatchStateCalculator
 import com.shaparapatah.stopwatch.model.state.StopwatchState
 import com.shaparapatah.stopwatch.model.time.TimestampMillisecondsFormatter
 

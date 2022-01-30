@@ -1,68 +1,41 @@
 package com.shaparapatah.stopwatch.view
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.shaparapatah.stopwatch.R
-import com.shaparapatah.stopwatch.model.ElapsedTimeCalculator
-import com.shaparapatah.stopwatch.model.StopwatchStateCalculator
-import com.shaparapatah.stopwatch.model.StopwatchStateHolder
-import com.shaparapatah.stopwatch.model.time.TimestampMillisecondsFormatter
-import com.shaparapatah.stopwatch.model.time.TimestampProvider
-import com.shaparapatah.stopwatch.viewmodel.StopwatchListOrchestrator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.shaparapatah.stopwatch.databinding.ActivityMainBinding
+import com.shaparapatah.stopwatch.viewmodel.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private val timestampProvider = object : TimestampProvider {
-        override fun getMilliseconds(): Long {
-            return System.currentTimeMillis()
-        }
-    }
+    private lateinit var binding: ActivityMainBinding
 
-    private val stopwatchListOrchestrator = StopwatchListOrchestrator(
-        StopwatchStateHolder(
-            StopwatchStateCalculator(
-                timestampProvider,
-                ElapsedTimeCalculator(timestampProvider)
-            ),
-            ElapsedTimeCalculator(timestampProvider),
-            TimestampMillisecondsFormatter()
-        ),
-        CoroutineScope(
-            Dispatchers.Main
-                    + SupervisorJob()
-        )
-    )
+    lateinit var mainViewModel: MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val textView = findViewById<TextView>(R.id.text_time)
-        CoroutineScope(
-            Dispatchers.Main
-                    + SupervisorJob()
-        ).launch {
-            stopwatchListOrchestrator.ticker.collect {
-                textView.text = it
+
+        val viewModel: MainViewModel by viewModel()
+        mainViewModel = viewModel
+        mainViewModel.liveData.observe(this) {
+            binding.textTime.text = it
+        }
+
+
+        with(binding) {
+            buttonStart.setOnClickListener {
+                mainViewModel.start()
             }
-        }
-
-        findViewById<Button>(R.id.button_start).setOnClickListener {
-            stopwatchListOrchestrator.start()
-        }
-
-        findViewById<Button>(R.id.button_pause).setOnClickListener {
-            stopwatchListOrchestrator.pause()
-        }
-        findViewById<Button>(R.id.button_stop).setOnClickListener {
-            stopwatchListOrchestrator.stop()
+            buttonPause.setOnClickListener {
+                mainViewModel.pause()
+            }
+            buttonStop.setOnClickListener {
+                mainViewModel.stop()
+            }
         }
     }
 }

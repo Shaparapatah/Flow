@@ -1,6 +1,6 @@
 package com.shaparapatah.stopwatch.model.time
 
-class TimestampMillisecondsFormatter() {
+class TimestampMillisecondsFormatter {
 
     /** Тут мы просто делим значение в миллисекундах на 1000 или на 60 без остатка.
     Если время на секундомере меньше часа, то мы отображаем минуты, секунды и миллисекунды.

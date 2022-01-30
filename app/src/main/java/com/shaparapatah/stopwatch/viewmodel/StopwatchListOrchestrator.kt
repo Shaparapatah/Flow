@@ -1,6 +1,9 @@
 package com.shaparapatah.stopwatch.viewmodel
 
-import com.shaparapatah.stopwatch.model.StopwatchStateHolder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.shaparapatah.stopwatch.model.repository.StopwatchStateHolder
 import com.shaparapatah.stopwatch.model.time.TimestampMillisecondsFormatter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,11 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 class StopwatchListOrchestrator(
     private val stopwatchStateHolder: StopwatchStateHolder,
     private val scope: CoroutineScope,
-) {
+) : ViewModel() {
 
     private var job: Job? = null
     private val mutableTicker = MutableStateFlow("")
     val ticker: StateFlow<String> = mutableTicker
+
+    private val livedata: LiveData<StopwatchStateHolder> = MutableLiveData()
 
 
     /** Функция start создает coroutine job, которая будет обновлять время для секундомера асинхронно.
