@@ -11,9 +11,9 @@ internal class DataSource(
 ) {
     val data: Flow<String> = flow {
         while (true) {
-            val dataFromDataBase = DataBase.fetchData()
+            val dataFromDataBase = dataBase.fetchData()
             emit(dataFromDataBase.toString())
-            /** emit - ф-ция испускает случайере число в виде String для всех, кто подписан на поток
+            /** emit - ф-ция испускает случайное число в виде String для всех, кто подписан на поток
              * Producer
              * Consumer
              */
@@ -21,10 +21,10 @@ internal class DataSource(
             /** delay - пауза */
         }
     }
-       // .flowOn(Dispatchers.Default)
-        /** flowOn - явно указывает в каком потоке будет выполняться работа
-         * catch - отлавливает ошибку
-         */
-      //  .catch { e ->
-        //    println(e.message)
-        }
+    // .flowOn(Dispatchers.Default)
+    /** flowOn - явно указывает в каком потоке будет выполняться работа
+     * catch - отлавливает ошибку
+     */
+    //  .catch { e ->
+    //    println(e.message)
+}
